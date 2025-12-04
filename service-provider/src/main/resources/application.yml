@@ -1,0 +1,61 @@
+# Spring Boot 应用配置
+spring:
+  # 应用名称，会显示在Nacos的服务列表中
+  application:
+    name: service-provider
+  # Spring Cloud 相关配置
+  cloud:
+    # Nacos 相关配置
+    nacos:
+      # 服务发现/注册配置
+      discovery:
+        # Nacos Server 的地址
+        server-addr: localhost:8848
+        # 命名空间，用于环境隔离 (例如：dev, test, prod)
+        namespace: public
+        # 服务分组，用于逻辑隔离
+        group: DEFAULT_GROUP
+        # Nacos 认证用户名
+        username: nacos
+        # Nacos 认证密码
+        password: nacos
+      # 配置中心配置
+      config:
+        # Nacos Server 的地址
+        server-addr: localhost:8848
+        # 命名空间
+        namespace: public
+        # 配置分组
+        group: DEFAULT_GROUP
+        # 指定配置文件的扩展名，应用会去Nacos读取 "service-provider.yaml" 这个配置文件
+        file-extension: yaml
+        # 开启配置的动态刷新功能
+        refresh-enabled: true
+        # Nacos 认证用户名
+        username: nacos
+        # Nacos 认证密码
+        password: nacos
+
+# 服务器相关配置
+server:
+  # 应用启动的端口号
+  port: 8081
+
+# Spring Boot Actuator 监控端点配置
+management:
+  endpoints:
+    web:
+      # 暴露所有端点 (例如 /health, /info, /metrics 等) 以供访问
+      exposure:
+        include: '*'
+  endpoint:
+    # 健康检查端点配置
+    health:
+      # 总是显示详细的健康信息
+      show-details: always
+
+# 应用自定义的本地默认配置
+# 注意：如果Nacos配置中心存在相同的配置项，这里的配置将会被覆盖
+provider:
+  message: Hello from Provider - Local Config
+  version: 1.0

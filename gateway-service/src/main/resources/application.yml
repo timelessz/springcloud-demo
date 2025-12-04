@@ -1,0 +1,117 @@
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    nacos:
+      # 服务发现配置
+      discovery:
+        server-addr: localhost:8848
+        namespace: public
+        group: DEFAULT_GROUP
+        username: nacos
+        password: nacos
+      # 配置中心配置
+      config:
+        server-addr: localhost:8848
+        namespace: public
+        group: DEFAULT_GROUP
+        file-extension: yaml
+        refresh-enabled: true
+        username: nacos
+        password: nacos
+    # Sentinel 配置
+    sentinel:
+      # Sentinel 控制台配置
+      transport:
+        dashboard: localhost:8858  # Sentinel 控制台地址
+        port: 8719                 # 与控制台通信的端口
+      # 饥饿加载
+      eager: true
+      # Sentinel 规则持久化到 Nacos
+      datasource:
+        # 网关流控规则
+        gw-flow:
+          nacos:
+            server-addr: localhost:8848
+            username: nacos
+            password: nacos
+            dataId: ${spring.application.name}-gw-flow-rules
+            groupId: SENTINEL_GROUP
+            rule-type: gw-flow
+            namespace: public
+        # API 分组规则
+        gw-api-group:
+          nacos:
+            server-addr: localhost:8848
+            username: nacos
+            password: nacos
+            dataId: ${spring.application.name}-gw-api-group-rules
+            groupId: SENTINEL_GROUP
+            rule-type: gw-api-group
+            namespace: public
+        # 流控规则
+        flow:
+          nacos:
+            server-addr: localhost:8848
+            username: nacos
+            password: nacos
+            dataId: ${spring.application.name}-flow-rules
+            groupId: SENTINEL_GROUP
+            rule-type: flow
+            namespace: public
+        # 降级规则
+        degrade:
+          nacos:
+            server-addr: localhost:8848
+            username: nacos
+            password: nacos
+            dataId: ${spring.application.name}-degrade-rules
+            groupId: SENTINEL_GROUP
+            rule-type: degrade
+            namespace: public
+    # Gateway 路由配置
+    gateway:
+      # 服务发现路由配置
+      discovery:
+        locator:
+          enabled: true  # 启用服务发现
+          lower-case-service-id: true  # 服务名小写
+      # 路由规则配置
+      routes:
+        # 路由到 service-provider
+        - id: service-provider
+          uri: lb://service-provider  # lb: 负载均衡
+          predicates:
+            - Path=/provider/**
+          filters:
+            - RewritePath=/provider/(?<segment>.*), /api/$\{segment}  # 重写路径，将 /provider/* 重写为 /api/*
+
+        # 路由到 service-consumer
+        - id: service-consumer
+          uri: lb://service-consumer
+          predicates:
+            - Path=/consumer/**
+          filters:
+            - RewritePath=/consumer/(?<segment>.*), /api/$\{segment}  # 重写路径，将 /consumer/* 重写为 /api/*
+
+server:
+  port: 8080
+
+# 日志配置
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    com.timelsszhuang.gateway: DEBUG
+
+# Actuator 配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+    gateway:
+      enabled: true  # 启用 Gateway 端点
+
