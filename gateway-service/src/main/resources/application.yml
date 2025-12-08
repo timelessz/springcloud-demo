@@ -95,7 +95,7 @@ spring:
             - RewritePath=/consumer/(?<segment>.*), /api/$\{segment}  # 重写路径，将 /consumer/* 重写为 /api/*
 
 server:
-  port: 8080
+  port: 8085
 
 # 日志配置
 logging:

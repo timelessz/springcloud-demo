@@ -11,7 +11,8 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 /**
- * 全局过滤器 - 记录请求日志
+ * 全局过滤器 - 记录路由处理日志
+ * 在请求路由到后端服务时记录简要信息
  *
  * @author timelsszhuang
  */
@@ -23,28 +24,23 @@ public class LoggingGlobalFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
+        String requestId = exchange.getAttribute("REQUEST_ID");
 
-        // 记录请求信息
-        logger.info("========================================");
-        logger.info("Gateway 请求路径: {}", request.getPath());
-        logger.info("请求方法: {}", request.getMethod());
-        logger.info("请求参数: {}", request.getQueryParams());
-        logger.info("客户端地址: {}", request.getRemoteAddress());
-        logger.info("========================================");
+        // 获取目标路由信息（如果存在）
+        String targetUri = exchange.getAttribute("org.springframework.cloud.gateway.support.ServerWebExchangeUtils.gatewayRequestUrl") != null
+                ? exchange.getAttribute("org.springframework.cloud.gateway.support.ServerWebExchangeUtils.gatewayRequestUrl").toString()
+                : "unknown";
 
-        // 记录开始时间
-        long startTime = System.currentTimeMillis();
+        // 记录路由信息（简洁版）
+        logger.debug("║ [路由处理] 请求ID: {} | 源路径: {} → 目标: {}",
+                requestId, request.getPath(), targetUri);
 
-        return chain.filter(exchange).then(Mono.fromRunnable(() -> {
-            // 计算请求耗时
-            long duration = System.currentTimeMillis() - startTime;
-            logger.info("请求完成，耗时: {} ms", duration);
-        }));
+        return chain.filter(exchange);
     }
 
     @Override
     public int getOrder() {
-        return -1; // 优先级最高
+        return 1; // 在前置和后置过滤器之间
     }
 
 }

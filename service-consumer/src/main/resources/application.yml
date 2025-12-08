@@ -35,3 +35,7 @@ consumer:
   message: Hello from Consumer - Local Config
   version: 1.0
 
+# Gateway 配置
+gateway:
+  url: http://localhost:8085
+
