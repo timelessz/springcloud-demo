@@ -71,8 +71,7 @@ public class PreLoggingFilter implements GlobalFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return Ordered.HIGHEST_PRECEDENCE; // 最高优先级，第一个执行
+        // 优先级 -200：在 CORS 和 Sentinel 之后，JWT 鉴权之前
+        return -200;
     }
 }
-
-
