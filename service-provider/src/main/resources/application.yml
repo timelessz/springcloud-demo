@@ -59,3 +59,59 @@ management:
 provider:
   message: Hello from Provider - Local Config
   version: 1.0
+
+# ==========================================
+# 以下是 Seata 分布式事务 Demo 配置
+# ==========================================
+
+# 数据库配置 - 需要连接三个数据库
+# 使用动态数据源或者简化为主数据源（订单库）
+spring.datasource:
+  # 订单数据库
+  url: jdbc:mysql://localhost:3306/seata_order?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+  username: root
+  password: root123
+  driver-class-name: com.mysql.cj.jdbc.Driver
+
+# JPA 配置
+spring.jpa:
+  hibernate:
+    ddl-auto: none
+  show-sql: true
+  properties:
+    hibernate:
+      format_sql: true
+      dialect: org.hibernate.dialect.MySQLDialect
+
+# Seata 分布式事务配置
+seata:
+  enabled: true
+  application-id: ${spring.application.name}
+  tx-service-group: my_tx_group
+  config:
+    type: nacos
+    nacos:
+      server-addr: localhost:8848
+      namespace: ""
+      group: SEATA_GROUP
+      username: nacos
+      password: nacos
+      data-id: seataServer.properties
+  registry:
+    type: nacos
+    nacos:
+      server-addr: localhost:8848
+      namespace: ""
+      group: SEATA_GROUP
+      application: seata-server
+      username: nacos
+      password: nacos
+  service:
+    vgroup-mapping:
+      my_tx_group: default
+
+# 日志配置
+logging:
+  level:
+    io.seata: info
+    com.timelsszhuang: debug

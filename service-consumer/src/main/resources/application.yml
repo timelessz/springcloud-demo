@@ -39,3 +39,37 @@ consumer:
 gateway:
   url: http://localhost:8085
 
+# ==========================================
+# Seata 分布式事务配置
+# ==========================================
+seata:
+  enabled: true
+  application-id: ${spring.application.name}
+  tx-service-group: my_tx_group
+  config:
+    type: nacos
+    nacos:
+      server-addr: localhost:8848
+      namespace: ""
+      group: SEATA_GROUP
+      username: nacos
+      password: nacos
+      data-id: seataServer.properties
+  registry:
+    type: nacos
+    nacos:
+      server-addr: localhost:8848
+      namespace: ""
+      group: SEATA_GROUP
+      application: seata-server
+      username: nacos
+      password: nacos
+  service:
+    vgroup-mapping:
+      my_tx_group: default
+
+# 日志配置
+logging:
+  level:
+    io.seata: info
+    com.timelsszhuang: debug
