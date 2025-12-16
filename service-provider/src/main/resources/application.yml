@@ -15,10 +15,6 @@ spring:
         namespace: public
         # 服务分组，用于逻辑隔离
         group: DEFAULT_GROUP
-        # Nacos 认证用户名
-        username: nacos
-        # Nacos 认证密码
-        password: nacos
       # 配置中心配置
       config:
         # Nacos Server 的地址
@@ -31,10 +27,21 @@ spring:
         file-extension: yaml
         # 开启配置的动态刷新功能
         refresh-enabled: true
-        # Nacos 认证用户名
-        username: nacos
-        # Nacos 认证密码
-        password: nacos
+  # 数据库配置 - Seata Demo 使用订单库
+  datasource:
+    url: jdbc:mysql://localhost:13306/seata_order?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  # JPA 配置
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
 
 # 服务器相关配置
 server:
@@ -64,39 +71,13 @@ provider:
 # 以下是 Seata 分布式事务 Demo 配置
 # ==========================================
 
-# 数据库配置 - 需要连接三个数据库
-# 使用动态数据源或者简化为主数据源（订单库）
-spring.datasource:
-  # 订单数据库
-  url: jdbc:mysql://localhost:3306/seata_order?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
-  username: root
-  password: root123
-  driver-class-name: com.mysql.cj.jdbc.Driver
-
-# JPA 配置
-spring.jpa:
-  hibernate:
-    ddl-auto: none
-  show-sql: true
-  properties:
-    hibernate:
-      format_sql: true
-      dialect: org.hibernate.dialect.MySQLDialect
 
 # Seata 分布式事务配置
 seata:
   enabled: true
   application-id: ${spring.application.name}
   tx-service-group: my_tx_group
-  config:
-    type: nacos
-    nacos:
-      server-addr: localhost:8848
-      namespace: ""
-      group: SEATA_GROUP
-      username: nacos
-      password: nacos
-      data-id: seataServer.properties
+  # 使用 file 模式直接指定地址，避免从 Nacos 获取 Docker 内部 IP
   registry:
     type: nacos
     nacos:
@@ -104,11 +85,19 @@ seata:
       namespace: ""
       group: SEATA_GROUP
       application: seata-server
-      username: nacos
-      password: nacos
+  config:
+    type: nacos
+    nacos:
+      server-addr: localhost:8848
+      namespace: ""
+      group: SEATA_GROUP
+      data-id: seataServer.properties
   service:
     vgroup-mapping:
       my_tx_group: default
+    grouplist:
+      default: 127.0.0.1:8091
+    disable-global-transaction: false
 
 # 日志配置
 logging:
