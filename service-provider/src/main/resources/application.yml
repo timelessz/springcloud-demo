@@ -77,21 +77,23 @@ seata:
   enabled: true
   application-id: ${spring.application.name}
   tx-service-group: my_tx_group
-  # 使用 file 模式直接指定地址，避免从 Nacos 获取 Docker 内部 IP
+  # 注册中心：仍用 nacos 发现 Seata Server 地址
   registry:
-    type: nacos
-    nacos:
-      server-addr: localhost:8848
-      namespace: ""
-      group: SEATA_GROUP
-      application: seata-server
+    type：file
+#    type: nacos
+#    nacos:
+#      server-addr: localhost:8848
+#      namespace: ""
+#      group: SEATA_GROUP
+#      application: seata-server
   config:
-    type: nacos
-    nacos:
-      server-addr: localhost:8848
-      namespace: ""
-      group: SEATA_GROUP
-      data-id: seataServer.properties
+    #    type: nacos
+    #    nacos:
+    #      server-addr: localhost:8848
+    #      namespace: ""
+    #      group: SEATA_GROUP
+    #      data-id: seataServer.
+    type: file
   service:
     vgroup-mapping:
       my_tx_group: default
