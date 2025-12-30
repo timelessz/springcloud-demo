@@ -128,7 +128,9 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
 
     @Override
     public int getOrder() {
-        // 优先级设置为 -100，确保在其他过滤器之前执行
+        // 优先级设置为 -100，在 PreLogging 之后，路由解析之前执行
+        // 这样可以在请求路由前进行认证，拦截未授权请求
+        // 执行顺序：PreLogging(-200) -> JWT认证(-100) -> 路由解析 -> 统计(0) -> Logging(1) -> PostLogging(最后)
         return -100;
     }
 }

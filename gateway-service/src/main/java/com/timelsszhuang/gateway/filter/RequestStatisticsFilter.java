@@ -88,7 +88,9 @@ public class RequestStatisticsFilter implements GlobalFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return 0; // 中等优先级
+        // 优先级设置为 -50，在 JWT 认证之后，路由处理之前执行
+        // 执行顺序：PreLogging(-200) -> JWT认证(-100) -> 统计(-50) -> Logging(1) -> PostLogging(最后)
+        return -50;
     }
 }
 

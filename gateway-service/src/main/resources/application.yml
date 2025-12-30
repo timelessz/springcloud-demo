@@ -8,8 +8,8 @@ spring:
         server-addr: localhost:8848
         namespace: public
         group: DEFAULT_GROUP
-        username: nacos
-        password: nacos
+#        username: nacos
+#        password: nacos
       # 配置中心配置
       config:
         server-addr: localhost:8848
@@ -17,8 +17,8 @@ spring:
         group: DEFAULT_GROUP
         file-extension: yaml
         refresh-enabled: true
-        username: nacos
-        password: nacos
+#        username: nacos
+#        password: nacos
     # Sentinel 配置
     sentinel:
       # Sentinel 控制台配置
@@ -33,8 +33,8 @@ spring:
         gw-flow:
           nacos:
             server-addr: localhost:8848
-            username: nacos
-            password: nacos
+#            username: nacos
+#            password: nacos
             dataId: ${spring.application.name}-gw-flow-rules
             groupId: SENTINEL_GROUP
             rule-type: gw-flow
@@ -43,8 +43,8 @@ spring:
         gw-api-group:
           nacos:
             server-addr: localhost:8848
-            username: nacos
-            password: nacos
+#            username: nacos
+#            password: nacos
             dataId: ${spring.application.name}-gw-api-group-rules
             groupId: SENTINEL_GROUP
             rule-type: gw-api-group
@@ -53,8 +53,8 @@ spring:
         flow:
           nacos:
             server-addr: localhost:8848
-            username: nacos
-            password: nacos
+#            username: nacos
+#            password: nacos
             dataId: ${spring.application.name}-flow-rules
             groupId: SENTINEL_GROUP
             rule-type: flow
@@ -63,8 +63,8 @@ spring:
         degrade:
           nacos:
             server-addr: localhost:8848
-            username: nacos
-            password: nacos
+#            username: nacos
+#            password: nacos
             dataId: ${spring.application.name}-degrade-rules
             groupId: SENTINEL_GROUP
             rule-type: degrade
@@ -100,8 +100,15 @@ server:
 # 日志配置
 logging:
   level:
+    root: INFO
     org.springframework.cloud.gateway: DEBUG
+    org.springframework.web: DEBUG
     com.timelsszhuang.gateway: DEBUG
+    com.timelsszhuang.gateway.filter: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"
+  file:
+    path: ./logs
 
 # Actuator 配置
 management:

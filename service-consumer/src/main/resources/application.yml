@@ -33,7 +33,7 @@ consumer:
 
 # Gateway 配置
 gateway:
-  url: http://localhost:8085
+  url: http://127.0.0.1:8085
 
 # ==========================================
 # Seata 分布式事务配置

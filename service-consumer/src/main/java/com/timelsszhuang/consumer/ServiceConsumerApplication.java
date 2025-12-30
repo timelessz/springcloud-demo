@@ -15,9 +15,20 @@ public class ServiceConsumerApplication {
         SpringApplication.run(ServiceConsumerApplication.class, args);
     }
 
-    @Bean
+    /**
+     * 带负载均衡的 RestTemplate，用于通过服务名调用（如 http://service-provider/...）
+     */
+    @Bean("loadBalancedRestTemplate")
     @LoadBalanced
-    public RestTemplate restTemplate() {
+    public RestTemplate loadBalancedRestTemplate() {
+        return new RestTemplate();
+    }
+
+    /**
+     * 普通 RestTemplate，用于直接调用 IP:PORT（如 http://127.0.0.1:8085/...）
+     */
+    @Bean("plainRestTemplate")
+    public RestTemplate plainRestTemplate() {
         return new RestTemplate();
     }
 

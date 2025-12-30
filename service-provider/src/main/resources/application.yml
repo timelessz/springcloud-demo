@@ -29,9 +29,9 @@ spring:
         refresh-enabled: true
   # 数据库配置 - Seata Demo 使用订单库
   datasource:
-    url: jdbc:mysql://localhost:13306/seata_order?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:3306/seata_order?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
     username: root
-    password: root
+    password: 65893ecd953a50c6
     driver-class-name: com.mysql.cj.jdbc.Driver
   # JPA 配置
   jpa:
